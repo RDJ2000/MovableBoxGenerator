@@ -1,4 +1,5 @@
-<h1 align="center">MovableBox</h1>
+
+<h1 align="center"><b>MovableBox</b></h1>
 
 <div>
 <button class="btn btn-primary" (click)="onCreateBox()">Create</button>
@@ -6,4 +7,5 @@
 <button *ngIf="!isKeyboardControl" (click)="keyboardControlToggle()" type="button" id="keyControl" class="btn btn-dark" value="off">Keyboard off</button>
 {{isKeyboardControl}}
 </div>
-<div class="wrapper" id="root"></div>
+<div #parentRoot class="parentRoot" id="parentRoot">
+    </div>

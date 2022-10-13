@@ -1,7 +1,9 @@
 import {
   Component,
-  OnInit
+  OnInit,
+  Renderer2, ElementRef, ViewChild, AfterViewInit 
 } from '@angular/core';
+
 
 @Component({
   selector: 'app-box',
@@ -11,115 +13,163 @@ import {
 export class BoxComponent implements OnInit {
 
   status: any;
-  boxid: any = 0;
-  //  boxPosition: any=[]
-  // boxTopPosition:Number=0;
-  // boxLeftPosition: Number=0;
+  boxid: any = -1;
+
   isKeyboardControl: Boolean = true;
+  boxes:any=[]
+  top: number=127
+  left: number=0
 
-  constructor() {}
 
+  constructor(private renderer:Renderer2) {}
+  
+@ViewChild('parentRoot', { static: false }) parentRoot!: ElementRef;
   ngOnInit(): void {}
 
 
+  onCreateBox(){
+    if(this.isKeyboardControl){	
+      this.boxid++
+    const boxbtn = this.renderer.createElement('button');
+    const text = this.renderer.createText('Box'+this.boxid);
+   
+    this.CustomizeBox(this.boxid,boxbtn);
+    
+    this.renderer.appendChild(boxbtn, text);
+    this.renderer.appendChild(this.parentRoot.nativeElement, boxbtn);
 
-  //Keyboard Toggle
-  keyboardControlToggle() {
+
+      if(this.isKeyboardControl){
+    this.renderer.listen(boxbtn, 'click',  () => {
+      //console.log(evt);
+    
+      //I Element already exist
+      // if(!this.boxes.includes(this.boxid)){
+      //   this.createNewPositionForBox(this.boxid)
+      // }
+      // else{
+      //     this.top=this.boxes.top
+      //     this.left=this.boxes.left
+      // }
+      this.renderer.setStyle(boxbtn, 'background-color', "black");
+      this.renderer.setStyle(boxbtn, 'color', "orange");
+      this.renderer.setStyle(boxbtn, 'border', "5px dashed rgb(255, 115, 0)");
+      this.boxEventHandler(boxbtn, this.boxid)
+      
+     })
+    }
+       
+  }
+}
+
+  CustomizeBox(boxId: any,boxbtnRef: any){
+    console.log(boxId,boxbtnRef);
+    this.renderer.setAttribute(boxbtnRef, 'id',boxId)
+    this.renderer.setAttribute(boxbtnRef, 'class',"box")
+    this.renderer.setStyle(boxbtnRef, 'position',"absolute")
+    this.renderer.setStyle(boxbtnRef, 'background-color', "black");
+    this.renderer.setStyle(boxbtnRef, 'color', "green");
+  }
+ 
+  
+   boxEventHandler(btnRef: any,btnId: any){
+    console.log(btnId)
+    let top= this.top
+    let left=this.left  
+   
+
+      //Keyboard Handler
+      if(this.isKeyboardControl){
+            this.renderer.listen(btnRef, 'keydown', (event) => {
+             
+              
+
+
+              if (event.key == "w" && top >= 127) {
+                
+                 top = top - 1
+                 this.renderer.setStyle(btnRef, 'top', top+"px");
+               }
+               //Action for s
+               if (event.key == "s" && top <= 715) {
+                console.log("in S");
+                 top = top + 1
+                 this.renderer.setStyle(btnRef, 'top', top+"px");
+               
+               }
+               //Action for a
+               if (event.key == "a" && left >= 6) {
+                
+                 left = left - 1
+                 this.renderer.setStyle(btnRef, 'left', left+"px");
+               }
+               //Action for d
+               if (event.key == "d" && left <= 595) {
+                
+                 left = left + 1
+                 this.renderer.setStyle(btnRef, 'left', left+"px");
+       
+               }
+
+               if (event.key == "Delete") {
+                // console.log(name);
+                btnRef.remove()
+       
+               }
+               
+            })
+
+
+            //On Focus out of Element
+              this.renderer.listen(btnRef, "focusout",()=>{
+              this.renderer.setStyle(btnRef, 'background-color', "black");
+              this.renderer.setStyle(btnRef, 'color', "green");
+              this.renderer.setStyle(btnRef, 'border', "5px dashed  rgb(0, 255, 21)");
+
+             //Remembering the Position of Boxes and storing it in array of ocjects
+            //  if(this.boxes.includes(this.boxid)){
+            //   this.updateNewPositionForBox(btnId,top,left)
+            // }
+              
+             
+           
+            // console.log(this.boxes);
+              
+            })
+   }
+  }
+
+
+   keyboardControlToggle(){
     if (this.isKeyboardControl == true) {
       this.isKeyboardControl = false;
+      
     } else if (this.isKeyboardControl == false) {
       this.isKeyboardControl = true;
+ 
     }
   }
 
 
-  //Dynamic Box Creation
-  onCreateBox() {
-    if (this.isKeyboardControl) {
-      const el = document.createElement('button');
-      this.boxid++
-      el.id = "box" + this.boxid;
-      el.className = "box";
-      el.innerText = "box" + this.boxid
-      el.style.position = 'absolute'
+//  createNewPositionForBox(boxIndex: any){
+ 
+  
+//    console.log("index not exist, created new one");
+    
+//   let box={"btnId":boxIndex, "top":127,"left":0}
+//   this.boxes.push(box);
+//   return box.top
+// }
+ 
 
-      // el.addEventListener("click",function(id){console.log("Box is selected ",this.id);})
-      el.addEventListener("click", this.onSelectBox)
-      el.style["padding"] = "1rem"
-      el.style["backgroundColor"] = "white"
-      el.style["height"] = "200px"
-      el.style["width"] = "200px"
+// updateNewPositionForBox(boxIndex: string | number,top: number,left: number){
+  
+//     console.log("index  updated");
+//     this.boxes[boxIndex].top= top
+//     this.boxes[boxIndex].left= left
+  
+// }
 
-      // el.style['z-index']=this.boxid
-      let root = document.getElementById("root");
-      root?.appendChild(el);
-
-    }
-  }
-
-  //Event Handling for selected Box
-  onSelectBox(this: HTMLElement, ev: Event, ) {
-    let isKey = document.getElementById("keyControl")
-    console.log(isKey?.innerHTML);
-    if (isKey?.innerHTML === "Keyboard On") {
-
-      // console.log("Box is selected "+this.id +" "+ev.type);
-      this.style["backgroundColor"] = "blue"
-      // this.style.position = 'absolute'
-      let top = 103
-      let left = 2
-      let bottom = 0
-      let right = 0
-      this.style["top"] = top + "px"
-      this.style["left"] = left + "px"
-      this.style["bottom"] = bottom + "px"
-      this.style["right"] = right + "px"
-      if (isKey?.innerHTML === "Keyboard On") {
-      this.addEventListener('keydown', (event) => {
-        var name = event.key;
-        // console.log(name);
-        //Action for w
-        if (name == "w" && top >= 103) {
-          console.log(name);
-          top = top - 1
-          this.style["top"] = top + "px"
-        }
-        //Action for s
-        if (name == "s" && top <= 702) {
-          console.log(name);
-
-          top = top + 1
-          this.style["top"] = top + "px"
-        }
-        //Action for a
-        if (name == "a" && left >= 2) {
-          console.log(name);
-          left = left - 1
-          this.style["left"] = left + "px"
-        }
-        //Action for d
-        if (name == "d" && left <= 600) {
-          console.log(name);
-          left = left + 1
-          this.style["left"] = left + "px"
-
-        }
-        if (name == "Delete") {
-          console.log(name);
-          this.remove()
-
-        }
-      }, false);
-      this.addEventListener('focusout', () => {
-        this.style["backgroundColor"] = "white"
-
-      })
-    }
-    }
-    else{
-      alert("Turn On Keyboard Controls")
-    }
-  }
 
 
 }
