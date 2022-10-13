@@ -28,9 +28,10 @@ export class BoxComponent implements OnInit {
 
 
   onCreateBox(){
-    // if(this.isKeyboardControl){	
-      this.boxid++
     const boxbtn = this.renderer.createElement('button');
+    if(this.isKeyboardControl){	
+      this.boxid++
+    
     const text = this.renderer.createText('Box'+this.boxid);
    
     this.CustomizeBox(this.boxid,boxbtn);
@@ -42,7 +43,8 @@ export class BoxComponent implements OnInit {
     
        
   }
-// }
+  
+}
 
 
 
@@ -57,7 +59,7 @@ export class BoxComponent implements OnInit {
  
 
   onBoxClick(boxbtn: any){
-    // if(this.isKeyboardControl){
+    if(this.isKeyboardControl){
       this.renderer.listen(boxbtn, 'click',  () => {
         //console.log(evt);
       
@@ -72,11 +74,13 @@ export class BoxComponent implements OnInit {
         this.renderer.setStyle(boxbtn, 'background-color', "black");
         this.renderer.setStyle(boxbtn, 'color', "orange");
         this.renderer.setStyle(boxbtn, 'border', "5px dashed rgb(255, 115, 0)");
+        
         this.boxEventHandler(boxbtn, this.boxid)
         
        })
       }
-  //}
+      
+  }
   
    boxEventHandler(btnRef: any,btnId: any){
   
@@ -85,7 +89,10 @@ export class BoxComponent implements OnInit {
    
 
       //Keyboard Handler
+      
       if(this.isKeyboardControl){
+        console.log(this.isKeyboardControl+" Kboard ctrl is");
+        
             this.renderer.listen(btnRef, 'keydown', (event) => {
              
               
@@ -98,7 +105,7 @@ export class BoxComponent implements OnInit {
                }
                //Action for s
                if (event.key == "s" && top <= 715) {
-                console.log("in S");
+              
                  top = top + 1
                  this.renderer.setStyle(btnRef, 'top', top+"px");
                
