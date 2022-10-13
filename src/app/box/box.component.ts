@@ -28,7 +28,7 @@ export class BoxComponent implements OnInit {
 
 
   onCreateBox(){
-    if(this.isKeyboardControl){	
+    // if(this.isKeyboardControl){	
       this.boxid++
     const boxbtn = this.renderer.createElement('button');
     const text = this.renderer.createText('Box'+this.boxid);
@@ -38,29 +38,13 @@ export class BoxComponent implements OnInit {
     this.renderer.appendChild(boxbtn, text);
     this.renderer.appendChild(this.parentRoot.nativeElement, boxbtn);
 
-
-      if(this.isKeyboardControl){
-    this.renderer.listen(boxbtn, 'click',  () => {
-      //console.log(evt);
+    this.onBoxClick(boxbtn)
     
-      //I Element already exist
-      // if(!this.boxes.includes(this.boxid)){
-      //   this.createNewPositionForBox(this.boxid)
-      // }
-      // else{
-      //     this.top=this.boxes.top
-      //     this.left=this.boxes.left
-      // }
-      this.renderer.setStyle(boxbtn, 'background-color', "black");
-      this.renderer.setStyle(boxbtn, 'color', "orange");
-      this.renderer.setStyle(boxbtn, 'border', "5px dashed rgb(255, 115, 0)");
-      this.boxEventHandler(boxbtn, this.boxid)
-      
-     })
-    }
        
   }
-}
+// }
+
+
 
   CustomizeBox(boxId: any,boxbtnRef: any){
     console.log(boxId,boxbtnRef);
@@ -71,9 +55,31 @@ export class BoxComponent implements OnInit {
     this.renderer.setStyle(boxbtnRef, 'color', "green");
   }
  
+
+  onBoxClick(boxbtn: any){
+    // if(this.isKeyboardControl){
+      this.renderer.listen(boxbtn, 'click',  () => {
+        //console.log(evt);
+      
+        //I Element already exist
+        // if(!this.boxes.includes(this.boxid)){
+        //   this.createNewPositionForBox(this.boxid)
+        // }
+        // else{
+        //     this.top=this.boxes.top
+        //     this.left=this.boxes.left
+        // }
+        this.renderer.setStyle(boxbtn, 'background-color', "black");
+        this.renderer.setStyle(boxbtn, 'color', "orange");
+        this.renderer.setStyle(boxbtn, 'border', "5px dashed rgb(255, 115, 0)");
+        this.boxEventHandler(boxbtn, this.boxid)
+        
+       })
+      }
+  //}
   
    boxEventHandler(btnRef: any,btnId: any){
-    console.log(btnId)
+  
     let top= this.top
     let left=this.left  
    
