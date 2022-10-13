@@ -1,0 +1,9 @@
+<h1 align="center">MovableBox</h1>
+
+<div>
+<button class="btn btn-primary" (click)="onCreateBox()">Create</button>
+<button *ngIf="isKeyboardControl" (click)="keyboardControlToggle()" type="button" id="keyControl" class="btn btn-light" value="on">Keyboard On</button>
+<button *ngIf="!isKeyboardControl" (click)="keyboardControlToggle()" type="button" id="keyControl" class="btn btn-dark" value="off">Keyboard off</button>
+{{isKeyboardControl}}
+</div>
+<div class="wrapper" id="root"></div>
